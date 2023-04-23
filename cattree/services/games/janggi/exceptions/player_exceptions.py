@@ -1,0 +1,2 @@
+class InvalidPlayerColourException(Exception):
+    pass
