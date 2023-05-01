@@ -1,4 +1,4 @@
-from cattree.services.games.janggi.exceptions.board_exceptions import PositionOutOfRangeException
+from cattree.services.games.janggi.enums.colour import Colour
 
 
 class Position:
@@ -6,8 +6,9 @@ class Position:
     HEIGHT = 10
 
     def __init__(self, x: int, y: int):
-        if not (0 <= x < self.WIDTH and 0 <= y < self.HEIGHT):
-            raise PositionOutOfRangeException()
+        # uncomment below for debugging
+        # if not (0 <= x < self.WIDTH and 0 <= y < self.HEIGHT):
+        #     raise PositionOutOfRangeException()
         self.__x = x
         self.__y = y
 
@@ -21,3 +22,47 @@ class Position:
 
     def __repr__(self):
         return f"({self.__x}, {self.__y})"
+
+    def is_valid(self) -> bool:
+        return 0 <= self.__x < self.WIDTH and 0 <= self.__y < self.HEIGHT
+
+    def get_adjacency_deltas(self) -> set[(int, int)]:
+        res = {(0, -1), (0, 1), (-1, 0), (1, 0)}
+        if self.__x == 0:
+            res.remove((-1, 0))
+        elif self.__x == self.WIDTH - 1:
+            res.remove((1, 0))
+        if self.__y == 0:
+            res.remove((0, -1))
+        elif self.__y == self.HEIGHT - 1:
+            res.remove((0, 1))
+        if self == Position(4, 1) or self == Position(4, 8):
+            res.update({(1, 1), (1, -1), (-1, 1), (-1, -1)})
+        elif self == Position(3, 0) or self == Position(3, 7):
+            res.add((1, 1))
+        elif self == Position(3, 2) or self == Position(3, 9):
+            res.add((1, -1))
+        elif self == Position(5, 0) or self == Position(5, 7):
+            res.add((-1, 1))
+        elif self == Position(5, 2) or self == Position(5, 9):
+            res.add((-1, -1))
+        return res
+
+    def translate_by_delta(self, delta: (int, int)) -> "Position":
+        return Position(self.__x + delta[0], self.__y + delta[1])
+
+    def is_in_castle(self, colour: Colour) -> bool:
+        y = 1 if colour == Colour.RED else 8
+        return 3 <= self.__x <= 5 and y - 1 <= self.__y <= y + 1
+
+    # def front(self, colour: Colour) -> "Position":
+    #     pass
+    #
+    # def back(self, colour: Colour) -> "Position":
+    #     pass
+    #
+    # def right(self, colour: Colour) -> "Position":
+    #     pass
+    #
+    # def left(self, colour: Colour) -> "Position":
+    #     pass

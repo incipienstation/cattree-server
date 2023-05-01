@@ -1,6 +1,14 @@
+from cattree.services.games.janggi.enums.colour import Colour
 from cattree.services.games.janggi.enums.elephant_config import ElephantConfig
 from cattree.services.games.janggi.exceptions.board_exceptions import PositionAlreadyOccupiedException
-from cattree.services.games.janggi.pieces.piece import *
+from cattree.services.games.janggi.pieces.cannon import Cannon
+from cattree.services.games.janggi.pieces.chariot import Chariot
+from cattree.services.games.janggi.pieces.elephant import Elephant
+from cattree.services.games.janggi.pieces.general import General
+from cattree.services.games.janggi.pieces.guard import Guard
+from cattree.services.games.janggi.pieces.horse import Horse
+from cattree.services.games.janggi.pieces.piece import Piece
+from cattree.services.games.janggi.pieces.soldier import Soldier
 from cattree.services.games.janggi.position import Position
 
 
@@ -19,10 +27,16 @@ class Board:
     def print_all(self) -> None:
         print(self.__state)
 
+    def get_movable_positions(self, colour: Colour):
+        for pos, piece in self.__state.items():
+            if piece.colour == colour and (isinstance(piece, Chariot) or isinstance(piece, General)):
+                print(pos, piece)
+                print(piece.get_movable_positions(pos, self.__state))
+
 
 class BoardFactory:
     @staticmethod
-    def get_board(blue_elephant_config: ElephantConfig, red_elephant_config: ElephantConfig) -> Board:
+    def generate_board(blue_elephant_config: ElephantConfig, red_elephant_config: ElephantConfig) -> Board:
         board = Board()
         BoardFactory.__generate_default(board)
         BoardFactory.__generate_optional_with_colour(board, blue_elephant_config, Colour.BLUE)
@@ -77,3 +91,11 @@ class BoardFactory:
             board.add_piece(Position(2, y), Horse(colour))
             board.add_piece(Position(6, y), Elephant(colour))
             board.add_piece(Position(7, y), Horse(colour))
+
+    @staticmethod
+    def generate_test_board_1() -> Board:
+        board = Board()
+        board.add_piece(Position(4, 8), Chariot(Colour.BLUE))
+        board.add_piece(Position(4, 4), Chariot(Colour.BLUE))
+        board.add_piece(Position(2, 8), Chariot(Colour.RED))
+        return board
