@@ -1,15 +1,7 @@
-from cattree.services.games.janggi.enums.colour import Colour
-from cattree.services.games.janggi.enums.elephant_config import ElephantConfig
+from cattree.services.games.janggi.enums import Colour, ElephantConfig
 from cattree.services.games.janggi.exceptions.board_exceptions import PositionAlreadyOccupiedException
-from cattree.services.games.janggi.pieces.cannon import Cannon
-from cattree.services.games.janggi.pieces.chariot import Chariot
-from cattree.services.games.janggi.pieces.elephant import Elephant
-from cattree.services.games.janggi.pieces.general import General
-from cattree.services.games.janggi.pieces.guard import Guard
-from cattree.services.games.janggi.pieces.horse import Horse
-from cattree.services.games.janggi.pieces.piece import Piece
-from cattree.services.games.janggi.pieces.soldier import Soldier
-from cattree.services.games.janggi.position import Position
+from cattree.services.games.janggi.pieces import Piece, Chariot, General, Cannon, Guard, Soldier, Horse, Elephant
+from cattree.services.games.janggi import Position
 
 
 class Board:
@@ -37,9 +29,11 @@ class Board:
     def remove_piece(self, position: Position) -> None:
         del self.__state[position]
 
+
+
     def get_movable_positions(self, colour: Colour):
         for pos, piece in self.__state.items():
-            if piece.colour == colour and (isinstance(piece, Cannon) or isinstance(piece, General)):
+            if piece.colour == colour:
                 print(pos, piece)
                 print(piece.get_movable_positions(pos, self.__state))
 

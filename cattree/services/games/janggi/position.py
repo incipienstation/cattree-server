@@ -1,6 +1,4 @@
-from typing import Set, Tuple
-
-from cattree.services.games.janggi.enums.colour import Colour
+from cattree.services.games.janggi.enums import Colour
 
 
 class Position:

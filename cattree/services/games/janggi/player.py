@@ -1,5 +1,4 @@
-from cattree.services.games.janggi.enums.colour import Colour
-from cattree.services.games.janggi.enums.elephant_config import ElephantConfig
+from cattree.services.games.janggi.enums import Colour, ElephantConfig
 
 
 class Player:

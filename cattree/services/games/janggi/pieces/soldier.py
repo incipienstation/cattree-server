@@ -5,7 +5,7 @@ from cattree.services.games.janggi.position import Position
 
 class Soldier(Piece):
     def __str__(self):
-        return super().__str__() + "졸" + "\033[0m"
+        return super().__str__() + ("졸" if self._colour == Colour.BLUE else "병") + "\033[0m"
 
     def get_movable_positions(self, curr_pos: Position, state: dict[Position, Piece]) -> set[Position]:
         def handle_filter(_delta: (int, int)) -> bool:
