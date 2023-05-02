@@ -29,7 +29,7 @@ class Board:
 
     def get_movable_positions(self, colour: Colour):
         for pos, piece in self.__state.items():
-            if piece.colour == colour and (isinstance(piece, Chariot) or isinstance(piece, General)):
+            if piece.colour == colour and (isinstance(piece, Cannon) or isinstance(piece, General)):
                 print(pos, piece)
                 print(piece.get_movable_positions(pos, self.__state))
 
@@ -98,4 +98,18 @@ class BoardFactory:
         board.add_piece(Position(4, 8), Chariot(Colour.BLUE))
         board.add_piece(Position(4, 4), Chariot(Colour.BLUE))
         board.add_piece(Position(2, 8), Chariot(Colour.RED))
+        print('test 1: Chariot')
+        return board
+
+    @staticmethod
+    def generate_test_board_2() -> Board:
+        board = Board()
+        board.add_piece(Position(4, 8), General(Colour.BLUE))
+        board.add_piece(Position(3, 7), Cannon(Colour.BLUE))
+        board.add_piece(Position(3, 4), Chariot(Colour.RED))
+        board.add_piece(Position(3, 1), Cannon(Colour.RED))
+        board.add_piece(Position(2, 7), Cannon(Colour.BLUE))
+        board.add_piece(Position(4, 7), Guard(Colour.BLUE))
+        board.add_piece(Position(6, 7), Soldier(Colour.RED))
+        print('test 2: Cannon')
         return board

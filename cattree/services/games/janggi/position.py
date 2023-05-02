@@ -1,3 +1,5 @@
+from typing import Set, Tuple
+
 from cattree.services.games.janggi.enums.colour import Colour
 
 
@@ -26,7 +28,9 @@ class Position:
     def is_valid(self) -> bool:
         return 0 <= self.__x < self.WIDTH and 0 <= self.__y < self.HEIGHT
 
-    def get_adjacency_deltas(self) -> set[(int, int)]:
+    def get_adjacency_deltas(self) -> set[(int, int)] | None:
+        if not self.is_valid():
+            return None
         res = {(0, -1), (0, 1), (-1, 0), (1, 0)}
         if self.__x == 0:
             res.remove((-1, 0))

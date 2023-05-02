@@ -17,7 +17,8 @@ class JanggiGame:
 
     def __initialise_board(self) -> None:
         # self.__board = BoardFactory.generate_board(self.__blue_player.elephant_config, self.__red_player.elephant_config)
-        self.__board = BoardFactory.generate_test_board_1()
+        # self.__board = BoardFactory.generate_test_board_1()
+        self.__board = BoardFactory.generate_test_board_2()
 
     def print_board(self) -> None:
         self.__board.print_all()
