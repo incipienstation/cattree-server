@@ -16,12 +16,12 @@ class JanggiGame:
         self.__initialise_board()
 
     def __initialise_board(self) -> None:
-        # self.__board = BoardFactory.generate_board(self.__blue_player.elephant_config, self.__red_player.elephant_config)
+        self.__board = BoardFactory.generate_board(self.__blue_player.elephant_config, self.__red_player.elephant_config)
         # self.__board = BoardFactory.generate_test_board_1()
-        self.__board = BoardFactory.generate_test_board_2()
+        # self.__board = BoardFactory.generate_test_board_2()
 
     def print_board(self) -> None:
-        self.__board.print_all()
+        print(self.__board)
 
     def get_curr_player_movable_positions(self) -> None:
         return self.__board.get_movable_positions(self.__curr_player_colour)
@@ -42,7 +42,7 @@ class JanggiGame:
             pass
 
     def print_curr_player_colour(self) -> None:
-        print('Current Player: BLUE' if self.__curr_player_colour == Colour.BLUE else 'Current Player: RED')
+        print('\033[34m<BLUE TURN>\033[0m' if self.__curr_player_colour == Colour.BLUE else '\033[31m<RED TURN>\033[0m')
 
     def __switch_turn(self) -> None:
         self.__curr_player_colour = Colour.BLUE if self.__curr_player_colour == Colour.RED else Colour.RED

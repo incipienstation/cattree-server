@@ -12,7 +12,11 @@ class Piece(ABC):
         return f"{self.__class__.__name__}({self._colour})"
 
     @abstractmethod
-    def get_movable_positions(self, curr_pos: Position, state: dict[Position, "Piece"]) -> list[Position]:
+    def __str__(self):
+        return "\033[34m" if self._colour == Colour.BLUE else "\033[31m"
+
+    @abstractmethod
+    def get_movable_positions(self, curr_pos: Position, state: dict[Position, "Piece"]) -> set[Position]:
         pass
 
     def _is_ally_with(self, other: "Piece") -> bool:
@@ -24,7 +28,7 @@ class Piece(ABC):
 
 
 class CastlePiece(Piece, ABC):
-    def get_movable_positions(self, curr_pos: Position, state: dict[Position, Piece]) -> list[Position]:
+    def get_movable_positions(self, curr_pos: Position, state: dict[Position, Piece]) -> set[Position]:
         def handle_filter(_delta: (int, int)) -> bool:
             translated_pos = curr_pos.translate_by_delta(_delta)
             is_in_castle = translated_pos.is_in_castle(self._colour)
@@ -34,4 +38,4 @@ class CastlePiece(Piece, ABC):
             return is_in_castle and is_not_occupied_by_ally
 
         filtered_deltas = filter(handle_filter, curr_pos.get_adjacency_deltas())
-        return list(map(lambda delta: curr_pos.translate_by_delta(delta), filtered_deltas))
+        return set(map(lambda delta: curr_pos.translate_by_delta(delta), filtered_deltas))

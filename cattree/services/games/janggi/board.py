@@ -16,6 +16,19 @@ class Board:
     def __init__(self):
         self.__state = {}
 
+    def __str__(self):
+        board_str = ""
+        for y in range(10):
+            for x in range(9):
+                piece = self.__state.get(Position(x, y))
+                if piece is not None:
+                    board_str += str(piece)
+                else:
+                    board_str += "ㅇ"
+                board_str += " "
+            board_str += "\n"
+        return board_str
+
     def add_piece(self, position: Position, piece: Piece) -> None:
         if position in self.__state:
             raise PositionAlreadyOccupiedException()
@@ -23,9 +36,6 @@ class Board:
 
     def remove_piece(self, position: Position) -> None:
         del self.__state[position]
-
-    def print_all(self) -> None:
-        print(self.__state)
 
     def get_movable_positions(self, colour: Colour):
         for pos, piece in self.__state.items():

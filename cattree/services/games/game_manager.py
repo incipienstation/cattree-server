@@ -7,7 +7,7 @@ from cattree.services.games.janggi.position import Position
 
 blue_player = Player(Colour.BLUE)
 red_player = Player(Colour.RED)
-blue_player.set_elephant_config(ElephantConfig.INNER)
+blue_player.set_elephant_config(ElephantConfig.LEFT)
 
 game = JanggiGame(blue_player, red_player)
 game.print_board()
