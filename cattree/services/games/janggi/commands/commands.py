@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
-from cattree.services.games.janggi.position import Position
 from cattree.services.games.janggi.engine import Engine
+from cattree.services.games.janggi.exceptions import InvalidMovementException
+from cattree.services.games.janggi.position import Position
 
 
 class Command(ABC):
@@ -24,8 +25,16 @@ class SurrenderCommand(Command):
 
 class BoardCommand(Command, ABC):
     def __init__(self, pos_from: Position, pos_to: Position):
-        self.__pos_from = pos_from
-        self.__pos_to = pos_to
+        self._pos_from = pos_from
+        self._pos_to = pos_to
+
+    @property
+    def pos_from(self):
+        return self._pos_from
+
+    @property
+    def pos_to(self):
+        return self._pos_to
 
 
 class MoveCommand(BoardCommand):
@@ -33,9 +42,11 @@ class MoveCommand(BoardCommand):
         super().__init__(pos_from, pos_to)
 
     def execute(self, engine: Engine):
-        # engine.move
-        engine.switch_turn()
-        pass
+        try:
+            engine.move_piece(self._pos_from, self._pos_to)
+            engine.switch_turn()
+        except InvalidMovementException as e:
+            print(e)
 
 
 class CaptureCommand(BoardCommand):
@@ -43,5 +54,9 @@ class CaptureCommand(BoardCommand):
         super().__init__(pos_from, pos_to)
 
     def execute(self, engine: Engine):
-        engine.switch_turn()
-        pass
+        try:
+            engine.capture_piece(self._pos_from, self._pos_to)
+            engine.switch_turn()
+        except InvalidMovementException as e:
+            print(e)
+

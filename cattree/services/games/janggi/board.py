@@ -1,3 +1,5 @@
+import time
+
 from cattree.services.games.janggi import Position
 from cattree.services.games.janggi.enums import Colour, ElephantConfig
 from cattree.services.games.janggi.exceptions.board_exceptions import PositionAlreadyOccupiedException
@@ -21,6 +23,9 @@ class Board:
             board_str += "\n"
         return board_str
 
+    def get_piece(self, position: Position) -> Piece | None:
+        return self.__state.get(position)
+
     def add_piece(self, position: Position, piece: Piece) -> None:
         if position in self.__state:
             raise PositionAlreadyOccupiedException()
@@ -29,11 +34,18 @@ class Board:
     def remove_piece(self, position: Position) -> None:
         del self.__state[position]
 
-    def get_movable_positions(self, colour: Colour):
+    def pop_piece(self, position: Position) -> Piece:
+        return self.__state.pop(position)
+
+    def get_movable_positions(self, colour: Colour) -> dict[Position, set[Position]]:
+        res = {}
+        start_time = time.perf_counter()
         for pos, piece in self.__state.items():
             if piece.colour == colour:
-                print(pos, piece)
-                print(piece.get_movable_positions(pos, self.__state))
+                res[pos] = piece.get_movable_positions(pos, self.__state)
+        end_time = time.perf_counter()
+        print(f"get_movable_positions: {round((end_time - start_time) * 1_000, 4)}ms\n")
+        return res
 
 
 class BoardFactory:

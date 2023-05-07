@@ -4,6 +4,7 @@ from cattree.services.games.janggi.enums import Colour
 class Position:
     WIDTH = 9
     HEIGHT = 10
+    __adjacency_delta_cache = {}
 
     def __init__(self, x: int, y: int):
         # uncomment below for debugging
@@ -27,6 +28,8 @@ class Position:
         return 0 <= self.__x < self.WIDTH and 0 <= self.__y < self.HEIGHT
 
     def get_adjacency_deltas(self) -> set[(int, int)] | None:
+        if self in self.__adjacency_delta_cache:
+            return self.__adjacency_delta_cache[self]
         if not self.is_valid():
             return None
         res = {(0, -1), (0, 1), (-1, 0), (1, 0)}
@@ -48,6 +51,7 @@ class Position:
             res.add((-1, 1))
         elif self == Position(5, 2) or self == Position(5, 9):
             res.add((-1, -1))
+        self.__adjacency_delta_cache[self] = res
         return res
 
     def translate_by_delta(self, delta: (int, int)) -> "Position":
