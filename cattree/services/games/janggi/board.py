@@ -1,14 +1,17 @@
+import copy
 import time
 
 from cattree.services.games.janggi import Position
 from cattree.services.games.janggi.enums import Colour, ElephantConfig
-from cattree.services.games.janggi.exceptions.board_exceptions import PositionAlreadyOccupiedException
+from cattree.services.games.janggi.exceptions.board_exceptions import BoardOperationException
 from cattree.services.games.janggi.pieces import Piece, Chariot, General, Cannon, Guard, Soldier, Horse, Elephant
 
 
 class Board:
+
     def __init__(self):
         self.__state = {}
+        self.__general_positions = {Colour.BLUE: Position(-1, -1), Colour.RED: Position(-1, -1)}
 
     def __str__(self):
         board_str = ""
@@ -23,16 +26,25 @@ class Board:
             board_str += "\n"
         return board_str
 
+    def __deepcopy__(self, memodict={}):
+        board = Board()
+        board.__state = copy.deepcopy(self.__state)
+        board.__general_positions = copy.deepcopy(self.__general_positions)
+        return board
+
     def get_piece(self, position: Position) -> Piece | None:
         return self.__state.get(position)
 
     def add_piece(self, position: Position, piece: Piece) -> None:
         if position in self.__state:
-            raise PositionAlreadyOccupiedException()
+            raise BoardOperationException(f"cannot add piece to {position} which is already occupied")
         self.__state[position] = piece
+        if isinstance(piece, General):
+            self.__general_positions[piece.colour] = position
 
     def remove_piece(self, position: Position) -> None:
-        del self.__state[position]
+        if position in self.__state:
+            del self.__state[position]
 
     def pop_piece(self, position: Position) -> Piece:
         return self.__state.pop(position)
@@ -47,6 +59,13 @@ class Board:
         print(f"get_movable_positions: {round((end_time - start_time) * 1_000, 4)}ms\n")
         return res
 
+    def is_player_in_check(self, colour: Colour) -> bool:
+        for pos, piece in self.__state.items():
+            if piece.colour != colour \
+                    and self.__general_positions.get(colour) in piece.get_movable_positions(pos, self.__state):
+                return True
+        return False
+
 
 class BoardFactory:
     @staticmethod
@@ -56,6 +75,10 @@ class BoardFactory:
         BoardFactory.__generate_optional_with_colour(board, blue_elephant_config, Colour.BLUE)
         BoardFactory.__generate_optional_with_colour(board, red_elephant_config, Colour.RED)
         return board
+
+    @staticmethod
+    def copy_board(board: Board) -> Board:
+        return copy.deepcopy(board)
 
     @staticmethod
     def __generate_default(board: Board) -> None:

@@ -28,6 +28,9 @@ class BoardCommand(Command, ABC):
         self._pos_from = pos_from
         self._pos_to = pos_to
 
+    def __str__(self):
+        return f"{self.__class__.__name__}: from {self.pos_from} to {self._pos_to}"
+
     @property
     def pos_from(self):
         return self._pos_from
@@ -45,6 +48,7 @@ class MoveCommand(BoardCommand):
         try:
             engine.move_piece(self._pos_from, self._pos_to)
             engine.switch_turn()
+            print(self)
         except InvalidMovementException as e:
             print(e)
 
@@ -57,6 +61,7 @@ class CaptureCommand(BoardCommand):
         try:
             engine.capture_piece(self._pos_from, self._pos_to)
             engine.switch_turn()
+            print(self)
         except InvalidMovementException as e:
             print(e)
 

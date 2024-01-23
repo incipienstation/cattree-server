@@ -5,5 +5,5 @@ class PositionOutOfRangeException(CustomException):
     pass
 
 
-class PositionAlreadyOccupiedException(CustomException):
+class BoardOperationException(CustomException):
     pass

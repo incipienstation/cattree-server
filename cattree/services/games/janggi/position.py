@@ -60,15 +60,3 @@ class Position:
     def is_in_castle(self, colour: Colour) -> bool:
         y = 1 if colour == Colour.RED else 8
         return 3 <= self.__x <= 5 and y - 1 <= self.__y <= y + 1
-
-    # def front(self, colour: Colour) -> "Position":
-    #     pass
-    #
-    # def back(self, colour: Colour) -> "Position":
-    #     pass
-    #
-    # def right(self, colour: Colour) -> "Position":
-    #     pass
-    #
-    # def left(self, colour: Colour) -> "Position":
-    #     pass

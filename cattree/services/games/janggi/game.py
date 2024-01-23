@@ -8,13 +8,14 @@ from cattree.services.games.janggi.exceptions import InvalidPlayerColourExceptio
 class JanggiGame:
     def __init__(self, blue_player: Player, red_player: Player):
         if blue_player.colour != Colour.BLUE or red_player.colour != Colour.RED:
-            raise InvalidPlayerColourException()
+            raise InvalidPlayerColourException("unable to instantiate game from given players")
         self.__engine = Engine(blue_player, red_player)
 
     def take_turn(self) -> None:
-        self.__engine.print_board()
         self.__engine.print_curr_player_colour()
-        self.__engine.save_curr_player_movable_positions()
+        self.__engine.print_board()
+        self.__engine.store_curr_player_movable_positions()
+        self.__engine.print_message()
 
     def finish(self) -> None:
         self.__engine.print_board()
